@@ -32,5 +32,19 @@ else:
         + locationResponse['AdministrativeArea']['LocalizedName'] + '. '\
         + locationResponse['Country']['LocalizedName']
         codigoLocal = locationResponse['Key']
-        print('Local: ', nomeLocal)
-        print('Código do local: ', codigoLocal)
+        print('Obtendo clima do local: ', nomeLocal)
+        ##print('Código do local: ', codigoLocal)
+
+        CurrentConditionsAPIUrl = "http://dataservice.accuweather.com/currentconditions/v1/"\
+                + codigoLocal + "?apikey=" + accuweatherAPIKey\
+                +"&language=pt-br"
+        r3 = requests.get(CurrentConditionsAPIUrl)
+        if (r3.status_code != 200):
+            print('Não foi possível obter o código do local.')
+        else:
+            CurrentConditionsResponse = json.loads(r3.text)
+            #print(pprint.pprint(CurrentConditionsResponse))
+            textoClima = CurrentConditionsResponse[0]['WeatherText']
+            temperatura = CurrentConditionsResponse[0]['Temperature']['Metric']['Value']
+            print('Clima no momento: ', textoClima)
+            print('Temperatura', str(temperatura) + 'graus Ceucius')
